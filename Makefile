@@ -13,8 +13,10 @@ EXE = showSTL.x
 $(EXE):	main.o \
 	getGeometryInput.o \
 	readBINARY.o \
-	readASCII.o
-	$(CC) main.o getGeometryInput.o readBINARY.o readASCII.o -o $(EXE) -framework OpenGL -framework Cocoa -framework IOKit -L /usr/local/lib -lglfw
+	readASCII.o \
+	drawGeometry.o \
+	createVertexArray.o
+	$(CC) main.o getGeometryInput.o readBINARY.o readASCII.o drawGeometry.o createVertexArray.o -o $(EXE) -framework OpenGL -framework Cocoa -framework IOKit -L /usr/local/lib -lglfw
 
 # compile dependencies
 
@@ -29,6 +31,12 @@ readBINARY.o: readBINARY.h readBINARY.cpp
 
 readASCII.o: readASCII.h readASCII.cpp
 	$(CC) $(CFLAGS) -c readASCII.cpp -o readASCII.o
+
+drawGeometry.o: drawGeometry.h drawGeometry.cpp
+	$(CC) $(CFLAGS) -I /usr/local/include -c drawGeometry.cpp -o drawGeometry.o
+
+createVertexArray.o: createVertexArray.h createVertexArray.cpp
+	$(CC) $(CFLAGS) -c createVertexArray.cpp -o createVertexArray.o
 
 clean:
 	/bin/rm -f *.o

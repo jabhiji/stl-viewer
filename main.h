@@ -1,6 +1,11 @@
 #ifndef MAIN_H
 #define MAIN_H
 
+// OpenGL specific headers
+
+#include <GLFW/glfw3.h>
+#include <OpenGL/glu.h>       // for using gluLookAt( ... )
+
 // include files
 
 #include <iostream>
@@ -24,6 +29,12 @@ extern int getGeometryInput(char* argv[],
                             double & x_min, double & x_max, 
                             double & y_min, double & y_max, 
                             double & z_min, double & z_max);
+
+extern void drawGeometry(GLFWwindow *window, float scale, int time,
+                         float *vertices, int NUM_VERTICES,
+                         float move_x, float move_y, float move_z);
+
+void createVertexArray(std::vector<triangle> & facet, float* vertices);
 
 // variables and constants used in main.cpp
 

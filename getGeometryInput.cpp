@@ -2,18 +2,18 @@
 
 #include "getGeometryInput.h"
 
-// this function handles the task of reading in input geometry files in STL format and finding out the required size of the 
-// environmental box
+// this function handles the task of reading in input geometry files in STL format 
+// and finding out the required size of the environmental box
 
 int getGeometryInput(char* argv[],
-                            std::vector<triangle> & facet, 
-                            double & x_min, double & x_max, 
-                            double & y_min, double & y_max, 
-                            double & z_min, double & z_max)
+                     std::vector<triangle> & facet, 
+                     double & x_min, double & x_max, 
+                     double & y_min, double & y_max, 
+                     double & z_min, double & z_max)
 {
     // open the STL file and read its contents
 
-    // get the name of the STL file from ../in/CARTGEN++_input.xml
+    // get the name of the STL file (command line input)
     std::string STL_filename = argv[1];
 
     // specify the location of STL files on this computer
@@ -59,6 +59,7 @@ int getGeometryInput(char* argv[],
         ptr++;    // move on to the next "byte"
     }
 
+    // free memory
     delete [] buffer;
 
     // calculate the fraction of characters(bytes) in part of the STL file that are BINARY
@@ -116,7 +117,7 @@ int getGeometryInput(char* argv[],
         return(1);
     }
  
-    // print the number of triangles and the number of horizontal triangles
+    // print the number of triangles
     std::cout << "The number of triangles in the STL file = " << facet.size() << std::endl;
 
     // print the domain extent along X, Y and Z
