@@ -5,6 +5,8 @@
 #include <GLFW/glfw3.h>
 #include <OpenGL/glu.h>       // for using gluLookAt( ... )
 
+//#define USE_LIGHTING
+
 static void key_callback(GLFWwindow* window, int key, int scancode,
                          int action, int mods)
 {
@@ -19,7 +21,8 @@ void drawGeometry(GLFWwindow *window, float scale, int time,
         // select background color to be black
         float R = 0, G = 0, B = 0, alpha = 0;
         glClearColor(R, G, B, alpha);
-/*
+
+#ifdef USE_LIGHTING
         // light position           x  y   z  w
         GLfloat light_position[] = {0, 0, 15, 0};
         glLightfv(GL_LIGHT0, GL_POSITION, light_position);
@@ -34,24 +37,37 @@ void drawGeometry(GLFWwindow *window, float scale, int time,
 
         glEnable(GL_LIGHTING);     // lighting ON
         glEnable(GL_LIGHT0);       // light source #0 ON
-*/
+#endif
         glEnable(GL_DEPTH_TEST);   // hidden surface removal
 
         // clear all pixels in the window with the color selected above
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+        //------------------------------------------------------------
+        // transformations on the 3D object - Modeling transformations
+        //------------------------------------------------------------
+
+        // change the current mode to MODELVIEW
         glMatrixMode(GL_MODELVIEW);
 
         // current transformation matrix = identity matrix
         glLoadIdentity();
 
-        // translate the geometry along X, Y and Z
-        glTranslatef(move_x, move_y, move_z);
-
         // rotate object by 90 degrees about the X axis (1,0,0)
         glRotatef(90.0, 1.0, 0.0, 0.0);
 
+        // translate the geometry along X, Y and Z
+        // such that it is centered at the origin
+        glTranslatef(move_x, move_y, move_z);
+
+        // ----------------------
+        // Viewing transformation
+        // ----------------------
+
+        // change the current mode to MODELVIEW
         glMatrixMode(GL_PROJECTION);
+
+        // current transformation matrix = identity matrix
         glLoadIdentity();
 
         // set clipping planes in the X-Y-Z coordinate system
@@ -66,30 +82,36 @@ void drawGeometry(GLFWwindow *window, float scale, int time,
                           0.0,        0.0, 0.0,    // camera looks towards point (x,y,z)
                           0.0,        0.0, 1.0);   // the "up" vector
 
+        //-----------------------------------------------------------
+        // Enable use of vertex data (coordinates, normals and color)
+        //-----------------------------------------------------------
+
         // enable use of vertex coordinate information from the array
         glEnableClientState(GL_VERTEX_ARRAY);
 
         glVertexPointer(3,                 // number of coordinates per vertex (X,Y,Z)
-                        GL_FLOAT,         // type of numbers
-                        9*sizeof(float),  // stride - gap between each set of (X,Y,Z)
+                        GL_FLOAT,          // type of numbers
+                        sizeof(float)*10,  // stride - gap between each set of (X,Y,Z)
                         &vertices[0]);     // offset - location of initial (X,Y,Z)
-
-//      std::cout << "Rendering " << NUM_VERTICES << " vertices using OpenGL\n";
 
         // enable use of vertex normal information from the array
         glEnableClientState(GL_NORMAL_ARRAY);
   
         glNormalPointer(GL_FLOAT,         // type of values
-                        sizeof(float)*9,  // stride - gap between each set of (R,G,B,A)
-                        &vertices[3]);     // offset - location of initial (N_x,N_y,N_z)
+                        sizeof(float)*10, // stride - gap between each set of (N_x,N_y,N_z) 
+                        &vertices[3]);    // offset - location of initial (N_x,N_y,N_z)
 
         // enable use of vertex color information from the array
         glEnableClientState(GL_COLOR_ARRAY);
   
         glColorPointer(4,                 // number of color values per vertex (R,G,B,A)
                        GL_FLOAT,          // type of values
-                       sizeof(float)*9,   // stride - gap between each set of (R,G,B,A)
-                       &vertices[3]);     // offset - location of initial (R,G,B,A)
+                       sizeof(float)*10,  // stride - gap between each set of (R,G,B,A)
+                       &vertices[6]);     // offset - location of initial (R,G,B,A)
+
+        //------------------
+        // draw the geometry
+        //------------------
 
         // draw command
         glDrawArrays(GL_TRIANGLES,     // type of GL element
@@ -120,45 +142,48 @@ void createVertexArray(std::vector<triangle> & facet, float* vertices)
             vertices[count +  3] = facet[facet_index].normal.x;
             vertices[count +  4] = facet[facet_index].normal.y;
             vertices[count +  5] = facet[facet_index].normal.z;
-            // (R,G,B) color values 
-            vertices[count +  6] = abs(facet[facet_index].normal.x);
-            vertices[count +  7] = abs(facet[facet_index].normal.y);
-            vertices[count +  8] = abs(facet[facet_index].normal.z);
+            // (R,G,B,A) color values 
+            vertices[count +  6] = fabs(facet[facet_index].normal.x);
+            vertices[count +  7] = fabs(facet[facet_index].normal.y);
+            vertices[count +  8] = fabs(facet[facet_index].normal.z);
+            vertices[count +  9] = 1.0;
         }
 
         // vertex 1
         {
             // x-y-z coordinates of the point
-            vertices[count +  9] = facet[facet_index].point[1].x;
-            vertices[count + 10] = facet[facet_index].point[1].y;
-            vertices[count + 11] = facet[facet_index].point[1].z;
+            vertices[count + 10] = facet[facet_index].point[1].x;
+            vertices[count + 11] = facet[facet_index].point[1].y;
+            vertices[count + 12] = facet[facet_index].point[1].z;
             // x-y-z coordinates of the normal
-            vertices[count + 12] = facet[facet_index].normal.x;
-            vertices[count + 13] = facet[facet_index].normal.y;
-            vertices[count + 14] = facet[facet_index].normal.z;
-            // (R,G,B) color values 
-            vertices[count + 15] = abs(facet[facet_index].normal.x);
-            vertices[count + 16] = abs(facet[facet_index].normal.y);
-            vertices[count + 17] = abs(facet[facet_index].normal.z);
+            vertices[count + 13] = facet[facet_index].normal.x;
+            vertices[count + 14] = facet[facet_index].normal.y;
+            vertices[count + 15] = facet[facet_index].normal.z;
+            // (R,G,B,A) color values 
+            vertices[count + 16] = fabs(facet[facet_index].normal.x);
+            vertices[count + 17] = fabs(facet[facet_index].normal.y);
+            vertices[count + 18] = fabs(facet[facet_index].normal.z);
+            vertices[count + 19] = 1.0;
         }
 
         // vertex 2
         {
             // x-y-z coordinates of the point
-            vertices[count + 18] = facet[facet_index].point[2].x;
-            vertices[count + 19] = facet[facet_index].point[2].y;
-            vertices[count + 20] = facet[facet_index].point[2].z;
+            vertices[count + 20] = facet[facet_index].point[2].x;
+            vertices[count + 21] = facet[facet_index].point[2].y;
+            vertices[count + 22] = facet[facet_index].point[2].z;
             // x-y-z coordinates of the normal
-            vertices[count + 21] = facet[facet_index].normal.x;
-            vertices[count + 22] = facet[facet_index].normal.y;
-            vertices[count + 23] = facet[facet_index].normal.z;
-            // (R,G,B) color values 
-            vertices[count + 24] = abs(facet[facet_index].normal.x);
-            vertices[count + 25] = abs(facet[facet_index].normal.y);
-            vertices[count + 26] = abs(facet[facet_index].normal.z);
+            vertices[count + 23] = facet[facet_index].normal.x;
+            vertices[count + 24] = facet[facet_index].normal.y;
+            vertices[count + 25] = facet[facet_index].normal.z;
+            // (R,G,B,A) color values 
+            vertices[count + 26] = fabs(facet[facet_index].normal.x);
+            vertices[count + 27] = fabs(facet[facet_index].normal.y);
+            vertices[count + 28] = fabs(facet[facet_index].normal.z);
+            vertices[count + 29] = 1.0;
         }
 
-        count += 27;
+        count += 30;
     }
 }
 
@@ -204,7 +229,7 @@ int main(int argc, char *argv[])
     //------------------------------------------
     // create a vertex array based on facet data
     //------------------------------------------
-    float* vertices = new float[facet.size()*27];
+    float* vertices = new float[facet.size()*30];
 
     createVertexArray(facet, vertices);
 
