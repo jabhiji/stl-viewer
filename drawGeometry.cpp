@@ -1,6 +1,6 @@
 #include "drawGeometry.h"
 
-void drawGeometry(GLFWwindow *window, float scale, int time,
+void drawGeometry(char* argv[], GLFWwindow *window, float scale, int time,
                   float *vertices, int NUM_VERTICES,
                   float move_x, float move_y, float move_z)
 {
@@ -39,7 +39,7 @@ void drawGeometry(GLFWwindow *window, float scale, int time,
         glLoadIdentity();
 
         // rotate object by 90 degrees about the X axis (1,0,0)
-        glRotatef(90.0, 1.0, 0.0, 0.0);
+        glRotatef(float(atoi(argv[2])), 1.0, 0.0, 0.0);
 
         // translate the geometry along X, Y and Z
         // such that it is centered at the origin

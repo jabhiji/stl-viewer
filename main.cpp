@@ -40,11 +40,11 @@ int main(int argc, char *argv[])
     float scale_y = (y_max - y_min)/2.0;
     float scale_z = (z_max - z_min)/2.0;
 
-    float scale = scale_x;
-    if (scale_y > scale) scale = scale_y;
-    if (scale_z > scale) scale = scale_z;
+    float scale_0 = scale_x;
+    if (scale_y > scale_0) scale_0 = scale_y;
+    if (scale_z > scale_0) scale_0 = scale_z;
 
-    scale = 1.5*scale;
+    scale_0 = 1.5*scale_0;
 
     //------------------------------------------
     // create a vertex array based on facet data
@@ -84,17 +84,17 @@ int main(int argc, char *argv[])
 
     // render things in the window
 
-    float delta = 0.01;  // change in scale
+    float scale = scale_0, delta = 0.0025*scale_0;  // change in scale
     int time = 0;
     while(!glfwWindowShouldClose(window))
     {
-        drawGeometry(window, scale, time,
+        drawGeometry(argv, window, scale, time,
                      vertices, 3*facet.size(),
                      move_x, move_y, move_z);
 
-//      // adjust scale
-//      scale += delta;
-//      if ( (scale > 10) || (scale < 1) ) delta = -delta;
+        // adjust scale
+        scale += delta;
+        if ( (scale > 1.2*scale_0) || (scale < 0.1*scale_0) ) delta = -delta;
 
         // increment time
         time++;

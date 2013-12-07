@@ -30,7 +30,7 @@ extern int getGeometryInput(char* argv[],
                             double & y_min, double & y_max, 
                             double & z_min, double & z_max);
 
-extern void drawGeometry(GLFWwindow *window, float scale, int time,
+extern void drawGeometry(char* argv[], GLFWwindow *window, float scale, int time,
                          float *vertices, int NUM_VERTICES,
                          float move_x, float move_y, float move_z);
 
