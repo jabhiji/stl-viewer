@@ -82,6 +82,12 @@ int main(int argc, char *argv[])
     // enable quitting the graphics by pressing ESC
     glfwSetKeyCallback(window, key_callback);
 
+    // create VBO and bind the vertex array to it
+    GLuint bufferID;
+    glGenBuffers(1, &bufferID);
+    glBindBuffer(GL_ARRAY_BUFFER, bufferID);
+    glBufferData(GL_ARRAY_BUFFER,facet.size()*30*sizeof(GLfloat),vertices,GL_STATIC_DRAW);
+
     // render things in the window
 
     float scale = scale_0, delta = 0.0025*scale_0;  // change in scale

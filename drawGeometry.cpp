@@ -77,14 +77,14 @@ void drawGeometry(char* argv[], GLFWwindow *window, float scale, int time,
         glVertexPointer(3,                 // number of coordinates per vertex (X,Y,Z)
                         GL_FLOAT,          // type of numbers
                         sizeof(float)*10,  // stride - gap between each set of (X,Y,Z)
-                        &vertices[0]);     // offset - location of initial (X,Y,Z)
+                        (GLvoid*)((char*)NULL));  // offset - location of initial (X,Y,Z)
 
         // enable use of vertex normal information from the array
         glEnableClientState(GL_NORMAL_ARRAY);
   
         glNormalPointer(GL_FLOAT,         // type of values
                         sizeof(float)*10, // stride - gap between each set of (N_x,N_y,N_z) 
-                        &vertices[3]);    // offset - location of initial (N_x,N_y,N_z)
+                       (GLvoid*)(((char*)NULL) + 12));  // offset - location of initial (N_x,N_y,N_z)
 
         // enable use of vertex color information from the array
         glEnableClientState(GL_COLOR_ARRAY);
@@ -92,7 +92,7 @@ void drawGeometry(char* argv[], GLFWwindow *window, float scale, int time,
         glColorPointer(4,                 // number of color values per vertex (R,G,B,A)
                        GL_FLOAT,          // type of values
                        sizeof(float)*10,  // stride - gap between each set of (R,G,B,A)
-                       &vertices[6]);     // offset - location of initial (R,G,B,A)
+                       (GLvoid*)(((char*)NULL) + 24));  // offset - location of initial (R,G,B,A)
 
         //------------------
         // draw the geometry
