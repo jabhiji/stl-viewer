@@ -82,11 +82,16 @@ int main(int argc, char *argv[])
     // enable quitting the graphics by pressing ESC
     glfwSetKeyCallback(window, key_callback);
 
-    // create VBO and bind the vertex array to it
+    // create a Vertex Buffer Object (VBO) and bind the vertex array to it
+    // makes rendering faster because data is copied to GPU memory
     GLuint bufferID;
     glGenBuffers(1, &bufferID);
     glBindBuffer(GL_ARRAY_BUFFER, bufferID);
     glBufferData(GL_ARRAY_BUFFER,facet.size()*30*sizeof(GLfloat),vertices,GL_STATIC_DRAW);
+
+    // fill mode or wireframe mode
+    glPolygonMode(GL_FRONT,   // options: GL_FRONT, GL_BACK, GL_FRONT_AND_BACK
+                  GL_LINE);   // options: GL_POINT, GL_LINE, GL_FILL (default)
 
     // render things in the window
 
