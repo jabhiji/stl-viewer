@@ -1,12 +1,33 @@
 #include "main.h"
 
+// state variables tied to keyboard input
+static bool running = true; 
+static bool pause = false;
+
+// keyboard input callback function
 static void key_callback(GLFWwindow* window, int key, int scancode,
                          int action, int mods)
 {
-    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+    // quit application when the user presses ESC
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
+        running = false;
         glfwSetWindowShouldClose(window, GL_TRUE);
+    }
+
+    // pause application when user presses SPACEBAR and keeps
+    // it pressed
+    if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) {
+        pause = true;
+    }
+
+    // continue running the application when the user releases
+    // the SPACEBAR
+    if (key == GLFW_KEY_SPACE && action == GLFW_RELEASE) {
+        pause = false;
+    }
 }
 
+// entry point
 int main(int argc, char *argv[])  
 {
     // check if all command line arguments were supplied
@@ -91,7 +112,7 @@ int main(int argc, char *argv[])
     // make the windows context current
     glfwMakeContextCurrent(window);
 
-    // enable quitting the graphics by pressing ESC
+    // register the keyboard input callback function defined at the top
     glfwSetKeyCallback(window, key_callback);
 
     // create a Vertex Buffer Object (VBO) and bind the vertex array to it
@@ -108,22 +129,28 @@ int main(int argc, char *argv[])
     // shading model
     glShadeModel(GL_SMOOTH);
 
-    // render things in the window
-
-    float scale = 5.0*scale_0, delta = 0.020*scale_0;  // change in scale
+    // initialize animation parameters 
+    float scale = 5.0*scale_0;    // initial scale
+    float delta = 0.020*scale_0;  // change in scale
     int frame = 0;
-    while(!glfwWindowShouldClose(window))
+
+    while(running)
     {
+        // render objects in the window
         drawGeometry(argv, window, scale, frame,
                      vertices, 3*facet.size(),
                      move_x, move_y, move_z);
 
-        // adjust scale
-        scale += delta;
-        if ( (scale > 10.0*scale_0) || (scale < 0.1*scale_0) ) delta = -delta;
+        // animate view if SPACEBAR is not pressed
+        if(!pause) 
+        {
+            // adjust scale (zoom-in and zoom-out)
+            scale += delta;
+            if ( (scale > 10.0*scale_0) || (scale < 0.1*scale_0) ) delta = -delta;
 
-        // increment frame number
-        frame++;
+            // increment frame number (changes viewing angle)
+            frame++;
+        }
     }
 
     glfwDestroyWindow(window);
