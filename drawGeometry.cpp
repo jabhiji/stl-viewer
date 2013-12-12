@@ -2,7 +2,8 @@
 
 void drawGeometry(char* argv[], GLFWwindow *window, float scale, int time,
                   float *vertices, int NUM_VERTICES,
-                  float move_x, float move_y, float move_z)
+                  float move_x, float move_y, float move_z,
+                  float rot_x, float rot_y, float rot_z)
 {
         // select background color to be black
         float R = 0, G = 0, B = 0, alpha = 0;
@@ -42,9 +43,9 @@ void drawGeometry(char* argv[], GLFWwindow *window, float scale, int time,
         glScalef(1.0/scale,1.0/scale,1.0/scale);
 
         // rotate object about the X, Y and Z axes
-        glRotatef(float(atoi(argv[4])), 0.0, 0.0, 1.0);  // rotate about Z
-        glRotatef(float(atoi(argv[3])), 0.0, 1.0, 0.0);  // rotate about Y
-        glRotatef(float(atoi(argv[2])), 1.0, 0.0, 0.0);  // rotate about X
+        glRotatef(rot_z, 0.0, 0.0, 1.0);  // rotate about Z
+        glRotatef(rot_y, 0.0, 1.0, 0.0);  // rotate about Y
+        glRotatef(rot_x, 1.0, 0.0, 0.0);  // rotate about X
 
         // translate the geometry along X, Y and Z
         // such that it is centered at the origin
@@ -77,9 +78,9 @@ void drawGeometry(char* argv[], GLFWwindow *window, float scale, int time,
         gluPerspective(fov_y, aspectRatio, nearClippingPlane, farClippingPlane);
 
         // "set camera position" projection
-        float angle = 0.002*time;
+        float angle = 0.0;//0.002*time;
 
-        gluLookAt (cos(angle), sin(angle), 1.0,    // camera position at (x,y,z)
+        gluLookAt (cos(angle), sin(angle), 0.0,    // camera position at (x,y,z)
                           0.0,        0.0, 0.0,    // camera looks towards point (x,y,z)
                           0.0,        0.0, 1.0);   // the "up" vector
 

@@ -3,6 +3,9 @@
 // state variables tied to keyboard input
 static bool running = true; 
 static bool pause = false;
+static float rotate_x = 0.0, drot_x = 0.0;
+static float rotate_y = 0.0, drot_y = 0.0;
+static float rotate_z = 0.0, drot_z = 0.0;
 
 // keyboard input callback function
 static void key_callback(GLFWwindow* window, int key, int scancode,
@@ -25,20 +28,49 @@ static void key_callback(GLFWwindow* window, int key, int scancode,
     if (key == GLFW_KEY_SPACE && action == GLFW_RELEASE) {
         pause = false;
     }
+
+    // rotate about Z axis if user presses the RIGHT arrow key 
+    if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS) {
+        drot_z = 1.0;
+    }
+    if (key == GLFW_KEY_RIGHT && action == GLFW_RELEASE) {
+        drot_z = 0.0;
+    }
+
+    // rotate about -Z axis if user presses the LEFT arrow key 
+    if (key == GLFW_KEY_LEFT && action == GLFW_PRESS) {
+        drot_z = -1.0;
+    }
+    if (key == GLFW_KEY_LEFT && action == GLFW_RELEASE) {
+        drot_z = 0.0;
+    }
+
+    // rotate about X axis if user presses the UP arrow key 
+    if (key == GLFW_KEY_UP && action == GLFW_PRESS) {
+        drot_x = -1.0;
+    }
+    if (key == GLFW_KEY_UP && action == GLFW_RELEASE) {
+        drot_x = 0.0;
+    }
+
+    // rotate about -X axis if user presses the DOWN arrow key 
+    if (key == GLFW_KEY_DOWN && action == GLFW_PRESS) {
+        drot_x = 1.0;
+    }
+    if (key == GLFW_KEY_DOWN && action == GLFW_RELEASE) {
+        drot_x = 0.0;
+    }
 }
 
 // entry point
 int main(int argc, char *argv[])  
 {
     // check if all command line arguments were supplied
-    const int CARGS = 4;
+    const int CARGS = 1;
     if(argc < 1 + CARGS)
     {
         std::cout << "Please provide the following:\n\n";
         std::cout << "     [name of the STL file]  \n";
-        std::cout << "     [rotation about X (deg)]\n";
-        std::cout << "     [rotation about Y (deg)]\n";
-        std::cout << "     [rotation about Z (deg)]\n";
         return 1;
     }
 
@@ -131,7 +163,7 @@ int main(int argc, char *argv[])
 
     // initialize animation parameters 
     float scale = 5.0*scale_0;    // initial scale
-    float delta = 0.020*scale_0;  // change in scale
+    float delta = 0.010*scale_0;  // change in scale
     int frame = 0;
 
     while(running)
@@ -139,7 +171,8 @@ int main(int argc, char *argv[])
         // render objects in the window
         drawGeometry(argv, window, scale, frame,
                      vertices, 3*facet.size(),
-                     move_x, move_y, move_z);
+                     move_x, move_y, move_z,
+                     rotate_x, rotate_y, rotate_z);
 
         // animate view if SPACEBAR is not pressed
         if(!pause) 
@@ -148,8 +181,10 @@ int main(int argc, char *argv[])
             scale += delta;
             if ( (scale > 10.0*scale_0) || (scale < 0.1*scale_0) ) delta = -delta;
 
-            // increment frame number (changes viewing angle)
-            frame++;
+            // changes viewing angle
+            rotate_x += drot_x;
+            rotate_y += drot_y;
+            rotate_z += drot_z;
         }
     }
 

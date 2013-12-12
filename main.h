@@ -32,7 +32,8 @@ extern int getGeometryInput(char* argv[],
 
 extern void drawGeometry(char* argv[], GLFWwindow *window, float scale, int time,
                          float *vertices, int NUM_VERTICES,
-                         float move_x, float move_y, float move_z);
+                         float move_x, float move_y, float move_z,
+                         float rot_x, float rot_y, float rot_z);
 
 void createVertexArray(std::vector<triangle> & facet, float* vertices);
 
