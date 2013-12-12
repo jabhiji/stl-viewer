@@ -38,8 +38,13 @@ void drawGeometry(char* argv[], GLFWwindow *window, float scale, int time,
         // current transformation matrix = identity matrix
         glLoadIdentity();
 
-        // rotate object by 90 degrees about the X axis (1,0,0)
-        glRotatef(float(atoi(argv[2])), 1.0, 0.0, 0.0);
+        // scale the object along X, Y and Z
+        glScalef(1.0/scale,1.0/scale,1.0/scale);
+
+        // rotate object about the X, Y and Z axes
+        glRotatef(float(atoi(argv[4])), 0.0, 0.0, 1.0);  // rotate about Z
+        glRotatef(float(atoi(argv[3])), 0.0, 1.0, 0.0);  // rotate about Y
+        glRotatef(float(atoi(argv[2])), 1.0, 0.0, 0.0);  // rotate about X
 
         // translate the geometry along X, Y and Z
         // such that it is centered at the origin
@@ -56,11 +61,22 @@ void drawGeometry(char* argv[], GLFWwindow *window, float scale, int time,
         glLoadIdentity();
 
         // set clipping planes in the X-Y-Z coordinate system
-        float x_min = -scale, x_max = scale;
-        float y_min = -scale, y_max = scale;
-        float z_min = -20*scale, z_max = 20*scale;
+/*
+        // ORTHOGRAPHIC projection
+        float x_min = -1.0, x_max = 1.0;
+        float y_min = -1.0, y_max = 1.0;
+        float z_min = -20, z_max = 20.0;
         glOrtho(x_min, x_max, y_min, y_max, z_min, z_max);
-   
+*/
+
+        // PERSPECTIVE projection
+        float fov_y = 50.0;             // field of view along Y (in degrees)
+        float aspectRatio = 1.0;        // aspect ratio of the window
+        float nearClippingPlane = 0.1;  // near clipping plane
+        float farClippingPlane = 10;  // far clipping plane
+        gluPerspective(fov_y, aspectRatio, nearClippingPlane, farClippingPlane);
+
+        // "set camera position" projection
         float angle = 0.002*time;
 
         gluLookAt (cos(angle), sin(angle), 1.0,    // camera position at (x,y,z)

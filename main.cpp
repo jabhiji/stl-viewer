@@ -9,6 +9,18 @@ static void key_callback(GLFWwindow* window, int key, int scancode,
 
 int main(int argc, char *argv[])  
 {
+    // check if all command line arguments were supplied
+    const int CARGS = 4;
+    if(argc < 1 + CARGS)
+    {
+        std::cout << "Please provide the following:\n\n";
+        std::cout << "     [name of the STL file]  \n";
+        std::cout << "     [rotation about X (deg)]\n";
+        std::cout << "     [rotation about Y (deg)]\n";
+        std::cout << "     [rotation about Z (deg)]\n";
+        return 1;
+    }
+
     //--------------------------------------------------
     // read STL geometry (triangle vertices and normals)
     //--------------------------------------------------
@@ -44,7 +56,7 @@ int main(int argc, char *argv[])
     if (scale_y > scale_0) scale_0 = scale_y;
     if (scale_z > scale_0) scale_0 = scale_z;
 
-    scale_0 = 1.5*scale_0;
+    std::cout << "Need to scale the geometry by: " << 1.0/scale_0 << std::endl;
 
     //------------------------------------------
     // create a vertex array based on facet data
@@ -90,25 +102,28 @@ int main(int argc, char *argv[])
     glBufferData(GL_ARRAY_BUFFER,facet.size()*30*sizeof(GLfloat),vertices,GL_STATIC_DRAW);
 
     // fill mode or wireframe mode
-    glPolygonMode(GL_FRONT,   // options: GL_FRONT, GL_BACK, GL_FRONT_AND_BACK
-                  GL_LINE);   // options: GL_POINT, GL_LINE, GL_FILL (default)
+    glPolygonMode(GL_FRONT,  // options: GL_FRONT, GL_BACK, GL_FRONT_AND_BACK
+                  GL_FILL);           // options: GL_POINT, GL_LINE, GL_FILL (default)
+
+    // shading model
+    glShadeModel(GL_SMOOTH);
 
     // render things in the window
 
-    float scale = scale_0, delta = 0.0025*scale_0;  // change in scale
-    int time = 0;
+    float scale = 5.0*scale_0, delta = 0.020*scale_0;  // change in scale
+    int frame = 0;
     while(!glfwWindowShouldClose(window))
     {
-        drawGeometry(argv, window, scale, time,
+        drawGeometry(argv, window, scale, frame,
                      vertices, 3*facet.size(),
                      move_x, move_y, move_z);
 
         // adjust scale
         scale += delta;
-        if ( (scale > 1.2*scale_0) || (scale < 0.1*scale_0) ) delta = -delta;
+        if ( (scale > 10.0*scale_0) || (scale < 0.1*scale_0) ) delta = -delta;
 
-        // increment time
-        time++;
+        // increment frame number
+        frame++;
     }
 
     glfwDestroyWindow(window);
