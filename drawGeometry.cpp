@@ -119,11 +119,4 @@ void drawGeometry(char* argv[], GLFWwindow *window, float scale, int time,
         glDrawArrays(GL_TRIANGLES,     // type of GL element
                      0,                // starting offset
                      NUM_VERTICES);    // number of vertices to be used for rendering
-
-        // swap front and back buffers
-        glfwSwapBuffers(window);
-
-        // poll for and processs events
-        glfwPollEvents();
-
 }

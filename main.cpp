@@ -33,6 +33,7 @@ static void key_callback(GLFWwindow* window, int key, int scancode,
     if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS) {
         drot_z = 1.0;
     }
+    // stop rotation when the key is released
     if (key == GLFW_KEY_RIGHT && action == GLFW_RELEASE) {
         drot_z = 0.0;
     }
@@ -41,6 +42,7 @@ static void key_callback(GLFWwindow* window, int key, int scancode,
     if (key == GLFW_KEY_LEFT && action == GLFW_PRESS) {
         drot_z = -1.0;
     }
+    // stop rotation when the key is released
     if (key == GLFW_KEY_LEFT && action == GLFW_RELEASE) {
         drot_z = 0.0;
     }
@@ -49,6 +51,7 @@ static void key_callback(GLFWwindow* window, int key, int scancode,
     if (key == GLFW_KEY_UP && action == GLFW_PRESS) {
         drot_x = -1.0;
     }
+    // stop rotation when the key is released
     if (key == GLFW_KEY_UP && action == GLFW_RELEASE) {
         drot_x = 0.0;
     }
@@ -186,6 +189,12 @@ int main(int argc, char *argv[])
             rotate_y += drot_y;
             rotate_z += drot_z;
         }
+
+        // swap front and back buffers
+        glfwSwapBuffers(window);
+
+        // poll for and processs events
+        glfwPollEvents();
     }
 
     glfwDestroyWindow(window);
