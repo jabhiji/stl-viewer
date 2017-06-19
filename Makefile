@@ -1,5 +1,5 @@
 # compiler used
-CC = g++ 
+CC = g++-4.8 
 
 # optional compile time flags (-O2, -O3 etc)
 CFLAGS = -O3
@@ -16,7 +16,7 @@ $(EXE):	main.o \
 	readASCII.o \
 	drawGeometry.o \
 	createVertexArray.o
-	$(CC) main.o getGeometryInput.o readBINARY.o readASCII.o drawGeometry.o createVertexArray.o -o $(EXE) -framework OpenGL -framework Cocoa -framework IOKit -L /usr/local/lib -lglfw
+	$(CC) main.o getGeometryInput.o readBINARY.o readASCII.o drawGeometry.o createVertexArray.o -o $(EXE) -L /usr/local/lib -lglfw3 -lGL -lGLU -lGLEW -lX11 -lpthread -ldl -lXrandr -lXinerama -lXi -lXxf86vm -lXcursor
 
 # compile dependencies
 
