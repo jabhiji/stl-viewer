@@ -3,19 +3,16 @@
 // -------------------------------------------------------------------------------------------------------------------
 // this function opens the STL file specified by the user and reads the contents
 
-int read_binary_STL_file(std::string STL_filename,std::vector<triangle> & facet,
+int read_binary_STL_file(std::string STL_filepath,std::vector<triangle> & facet,
                          double & x_min, double & x_max, double & y_min, double & y_max, double & z_min, double & z_max)
 {
-    // specify the location of STL files on this computer
-    std::string STL_files_path = "../stl/";   
-
     // declare an (input) file object
     std::ifstream binaryInputFile;
 
     // open the STL file by using the full path and the name
     // specify that the file is opened in "read-only" mode
     // specify that the file is opened in binary format
-    binaryInputFile.open((STL_files_path + STL_filename).c_str(), std::ifstream::in | std::ifstream::binary);
+    binaryInputFile.open((STL_filepath).c_str(), std::ifstream::in | std::ifstream::binary);
 
     // check whether the file was opened successfully
     // if yes then continue otherwise terminate program execution
