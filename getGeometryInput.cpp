@@ -14,17 +14,14 @@ int getGeometryInput(char* argv[],
     // open the STL file and read its contents
 
     // get the name of the STL file (command line input)
-    std::string STL_filename = argv[1];
-
-    // specify the location of STL files on this computer
-    std::string STL_files_path = "../stl/";
+    std::string STL_filepath = argv[1];
 
     // BEGIN algorithm from ParaView to detect whether the STL file is ASCII or BINARY
 
     // open the STL file specified by the user as "read-only" and in "binary" mode
     // and store the pointer to the file buffer in "fp"
 
-    FILE *fp = fopen((STL_files_path+STL_filename).c_str(),"rb");
+    FILE *fp = fopen((STL_filepath).c_str(),"rb");
 
     // specify how many bytes of the file will be read to calculate the percentage of characters
     // that are non-ASCII
@@ -81,14 +78,14 @@ int getGeometryInput(char* argv[],
 
     // END algorithm from ParaView to detect whether the STL file is ASCII or BINARY
 
-    std::cout << "Input Geometry File = " << STL_filename << " (" << STL_filetype << ")" << std::endl;
+    std::cout << "Input Geometry File = " << STL_filepath << " (" << STL_filetype << ")" << std::endl;
  
     // function call to open the ascii file and read the content
     if (STL_filetype == "ascii")
     {
         // call the function to read the ASCII file
         // if all goes well, this function will return a value of 0
-        int error = read_ascii_STL_file(STL_filename,facet,x_min,x_max,y_min,y_max,z_min,z_max);
+        int error = read_ascii_STL_file(STL_filepath,facet,x_min,x_max,y_min,y_max,z_min,z_max);
 
         // if something goes wrong, the above function will return a value of 1
         if (error == 1) 
@@ -102,7 +99,7 @@ int getGeometryInput(char* argv[],
     {
         // call the function to read the BINARY file
         // if all goes well, this function will return a value of 0
-        int error = read_binary_STL_file (STL_filename,facet,x_min,x_max,y_min,y_max,z_min,z_max);
+        int error = read_binary_STL_file (STL_filepath,facet,x_min,x_max,y_min,y_max,z_min,z_max);
 
         // if something goes wrong, the above function will return a value of 1
         if (error == 1) 
