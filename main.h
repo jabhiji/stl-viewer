@@ -3,8 +3,9 @@
 
 // OpenGL specific headers
 
+#include <GL/glew.h>
+#include <GL/glut.h>
 #include <GLFW/glfw3.h>
-#include <OpenGL/glu.h>       // for using gluLookAt( ... )
 
 // include files
 

@@ -4,7 +4,7 @@
 // OpenGL specific headers
 
 #include <GLFW/glfw3.h>
-#include <OpenGL/glu.h>       // for using gluLookAt( ... )
+#include <GL/glu.h>       // for using gluLookAt( ... )
 
 #include <iostream> // atoi 
 #include <cmath>    // for using sin/cos
